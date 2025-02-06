@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherApp</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <nav id="nav">
+        <input type="text" placeholder="Enter city name" id="SearchBar">
+        <button id="button" style="height: 40px; margin-top: 8.5px;"><i class="fa fa-search"></i></button>
+        
+    </nav>
+
+    <div id="error"> Invalid city name</div>
+
+    
+
+
+    <main>
+        <div id="card">
+            <div id="c1">
+
+                <img src="Images\12607703.png" id="img" style="height: 100px; margin-top: 5px;">
+                <h1 id="temp" style="line-height: 2px;">22°c</h2>
+                    <h2 id="city">Delhi</h3>
+
+
+                        <h2></h2>
+
+            </div>
+
+
+            <div id="c3"> Humidity <br> <i class='fas fa-water'
+                    style="color: rgb(12, 28, 75); font-size: 50px; margin-top: 10px;"></i>
+                <h1 id="humidity">50%</h1>
+            </div>
+            <div id="c4">Weather <br> <i class='fas fa-smog'
+                    style="color: rgb(12, 28, 75); font-size: 50px; margin-top: 10px;"></i>
+                <h1 id="weather">Clean</h1>
+            </div>
+
+        </div>
+
+
+    </main>
+    <script>
+        const apiKey = "305f62a42d10ff43f9c1a3be95158ad5";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const searchBox = document.querySelector("#nav input");
+        const searchBtn = document.querySelector("#nav button");
+        const weatherIcon = document.querySelector("#img")
+
+        async function checkWeather(city) {
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+
+            if(response.status == 404) {
+               document.querySelector("#error").style.display = "block";
+               document.querySelector("main").style.display = "none"; 
+ 
+            }
+
+            else{
+
+                var data = await response.json();
+            console.log(data);
+
+            document.querySelector("#city").innerHTML = data.name;
+            document.querySelector("#temp").innerHTML = Math.round(data.main.temp) + "°c";
+            document.querySelector("#humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector("#weather").innerHTML = data.weather[0].main;
+
+            if (data.weather[0].main == "Clouds") {
+                weatherIcon.src = "Images/cloudy.png";
+
+            }
+            else if (data.weather[0].main == "Clear") {
+                weatherIcon.src = "Images/sun.png";
+            }
+
+            else if (data.weather[0].main == "Rain") {
+                weatherIcon.src = "Images/rain.png";
+            }
+            else if (data.weather[0].main == "Drizzle") {
+                weatherIcon.src = "Images/drizzle.png";
+            }
+
+            else if (data.weather[0].main == "Mist") {
+                weatherIcon.src = "Images/mist.png";
+            }
+
+            document.querySelector("main").style.display="block";
+            document.querySelector("#error").style.display = "none";
+
+            }
+            
+            
+
+        }
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        })
+
+
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>
